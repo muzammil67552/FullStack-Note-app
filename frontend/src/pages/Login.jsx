@@ -2,14 +2,15 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/context/ContextProvider";
-
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css"; // 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const {login} = useAuth();
-  
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -19,17 +20,23 @@ const Login = () => {
       });
 
       if (response.data.success) {
-        login(response.data.user)
-        localStorage.setItem("token", response.data.token)
+        login(response.data.user);
+        localStorage.setItem("token", response.data.token);
         navigate("/");
+      } else {
+        // Show error if login is unsuccessful
+        toast.error("Login failed: " + response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      // Handle error from the server
+      console.error("Login error:", error);
+      toast.error("An error occurred during login. Please try again.");
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <ToastContainer /> {/* Add ToastContainer for displaying toasts */}
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -66,7 +73,7 @@ const Login = () => {
             Login
           </button>
           <p className="mt-4 text-center text-sm text-gray-600">
-            Dont have an account?{" "}
+            Don't have an account?{" "}
             <Link className="text-green-500 hover:underline" to="/register">
               Sign Up
             </Link>

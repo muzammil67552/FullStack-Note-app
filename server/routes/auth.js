@@ -39,9 +39,12 @@ router.post("/login", async (req, res) => {
     if (!checkPassword) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
+    const token = jwt.sign({id: user._id}, "secretkeyofnoteapp123@#", {
+      expiresIn: "5h",
+    })
     
     return res.status(200).json({
-      success: true, message: "Account login successful",
+      success: true, token,user:{name: user.name}, message:"Login"
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Failed to login" });

@@ -1,30 +1,31 @@
 import { useState } from "react";
-import axios from "axios"; // Add this line
+import axios from "axios"; 
 import Navbar from "../components/Navbar";
 import NoteModal from "../components/NoteModal";
 
 const Home = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  
   const closeModal = () => {
     setModalOpen(false);
   };
 
   const addNote = async (title, description) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/note/add", {
+      const response = await axios.post("http://localhost:5000/api/api/add", {
         title,
         description,
-      });
-      {
+      }, {
         headers: {
-          Authorization:`Bearer${localStorage.getItem("token")}`
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         }
-      }
+      });
+
       if (response.data.success) {
         closeModal();
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   };
 

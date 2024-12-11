@@ -5,7 +5,6 @@ const middleware = require("../middleware/middleware");
 
 router.post("/add", middleware, async (req, res) => {
     try {
-      console.log("Request body:", req.body); // Log the request body
       const { title, description } = req.body;
   
       if (!title || !description) {
@@ -17,7 +16,8 @@ router.post("/add", middleware, async (req, res) => {
         description,
         userId: req.user.id, // Ensure `req.user` is defined
       });
-  
+      
+   
       await newNote.save();
       return res.status(200).json({ success: true, message: "Created Successfully" });
     } catch (error) {
@@ -26,5 +26,13 @@ router.post("/add", middleware, async (req, res) => {
     }
   });
   
+  router.get('/', async (req,res) =>{
+    try {
+        const notes = await Note.find()
+        res.status(200).json({success:true, notes})
+    } catch (error) {
+        res.status(500).json({success:true, message:"cant create notes"})
+    }
+  })
 
 module.exports = router;

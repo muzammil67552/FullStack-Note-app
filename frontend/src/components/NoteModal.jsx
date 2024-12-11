@@ -1,55 +1,57 @@
 import { useState } from "react";
 import axios from "axios";
 
-const NoteModal = ({closeModal, addNote}) => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    
+const NoteModal = ({ closeModal, addNote }) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        addNote(title, description)
-       
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    addNote(title, description);
+  };
 
-    return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-500">
-            <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-                <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Add New Note</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className={`w-full p-2 border border-gray-300 rounded-md shadow focus:ring-2 focus:ring-green-400 ${title ? "font-bold" : ""}`}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <textarea
-                            placeholder="Note Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded-md shadow focus:ring-2 focus:ring-green-400 h-32"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-2 px-4 text-white font-medium rounded-md bg-gradient-to-r from-blue-400 to-blue-500 hover:from-green-500 hover:to-green-600 transition-colors"
-                    >
-                        Add Now
-                    </button>
-                </form>
-                <button
-                    className="mt-4 text-red-400 hover:text-red-600"
-                    onClick={closeModal}
-                >
-                    Cancel Now
-                </button>
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex justify-center items-center bg-black bg-opacity-50 fixed inset-0 z-50">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-2xl relative">
+        <h1 className="text-3xl font-extrabold text-center text-gray-700 mb-6">
+          Add New Note
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className={`w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                title ? "font-semibold" : ""
+              }`}
+            />
+          </div>
+          <div className="mb-6">
+            <textarea
+              placeholder="Note Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 h-32 resize-none"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-3 px-5 text-white font-bold text-lg rounded-lg bg-gradient-to-r from-green-400 to-blue-500 hover:from-blue-500 hover:to-green-400 transition-all transform hover:scale-105"
+          >
+            Add Now
+          </button>
+        </form>
+        <button
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          onClick={closeModal}
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default NoteModal;

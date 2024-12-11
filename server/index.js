@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 //api creating
 app.use("/api/auth", authRouter,);
-app.use("/api/api", noteRouter);
+app.use("/api/note", noteRouter);
 
 // Start the server
 const PORT = 5000;

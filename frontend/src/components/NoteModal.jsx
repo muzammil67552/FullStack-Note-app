@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
 
-
-const NoteModal = ({ closeModal, addNote,currentNote , editNote}) => {
+const NoteModal = ({ closeModal, addNote, currentNote, editNote }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
- useEffect( () => {
-   if(currentNote) {
-    setTitle(currentNote.title)
-    setDescription(currentNote.description)
-   }
- },[currentNote])
- 
+  useEffect(() => {
+    if (currentNote) {
+      setTitle(currentNote.title);
+      setDescription(currentNote.description);
+    }
+  }, [currentNote]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(currentNote) {
-        editNote(currentNote._id, title, description)
+    if (currentNote) {
+      editNote(currentNote._id, title, description);
     } else {
       addNote(title, description);
     }
-   
   };
 
   return (
@@ -52,7 +50,7 @@ const NoteModal = ({ closeModal, addNote,currentNote , editNote}) => {
             type="submit"
             className="w-full py-3 px-5 text-white font-bold text-lg rounded-lg bg-gradient-to-r from-green-400 to-blue-500 hover:from-blue-500 hover:to-green-400 transition-all transform hover:scale-105"
           >
-            { currentNote ? "Edit Note" : "Add Note"}
+            {currentNote ? "Edit Note" : "Add Note"}
           </button>
         </form>
         <button

@@ -37,22 +37,20 @@ const Home = () => {
 
   // Delete a note
   const deleteNote = async (id) => {
-    console.log("Deleting note with ID:", id); 
+    console.log("Deleting note with ID:", id);
     try {
       const response = await axios.delete(`http://localhost:5000/api/note/delete/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure your token is valid
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      // Check if the response indicates success
       if (response.data && response.data.success) {
         fetchNotes(); // Refresh the notes after deletion
       } else {
         console.error("Error: Response did not indicate success", response.data);
       }
     } catch (error) {
-      // Log detailed error message for debugging
       console.error("Error deleting note:", error.response?.data || error.message);
     }
   };
@@ -70,12 +68,11 @@ const Home = () => {
         { title, description },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure your token is valid
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      // Check if the response indicates success
       if (response.data && response.data.success) {
         fetchNotes();
         closeModal();
@@ -83,8 +80,27 @@ const Home = () => {
         console.error("Error: Response did not indicate success", response.data);
       }
     } catch (error) {
-      // Log detailed error message for debugging
       console.error("Error saving note:", error.response?.data || error.message);
+    }
+  };
+
+  // Edit note function
+  const editNote = async (id, title, description) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/note/update/${id}`, { title, description }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.data && response.data.success) {
+        fetchNotes(); // Refresh the notes after editing
+        closeModal();
+      } else {
+        console.error("Error: Response did not indicate success", response.data);
+      }
+    } catch (error) {
+      console.error("Error editing note:", error.response?.data || error.message);
     }
   };
 
@@ -113,7 +129,12 @@ const Home = () => {
       </button>
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <NoteModal closeModal={closeModal} addNote={addNote} currentNote={currentNote} />
+          <NoteModal 
+            closeModal={closeModal} 
+            addNote={addNote} 
+            editNote={editNote} // Pass the editNote function
+            currentNote={currentNote} 
+          />
         </div>
       )}
     </div>

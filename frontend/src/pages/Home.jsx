@@ -35,6 +35,28 @@ const Home = () => {
     setModalOpen(true);
   };
 
+  // Delete a note
+  const deleteNote = async (id) => {
+    console.log("Deleting note with ID:", id); 
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/note/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure your token is valid
+        },
+      });
+
+      // Check if the response indicates success
+      if (response.data && response.data.success) {
+        fetchNotes(); // Refresh the notes after deletion
+      } else {
+        console.error("Error: Response did not indicate success", response.data);
+      }
+    } catch (error) {
+      // Log detailed error message for debugging
+      console.error("Error deleting note:", error.response?.data || error.message);
+    }
+  };
+
   // Add a new note or update an existing one
   const addNote = async (title, description) => {
     try {
@@ -48,48 +70,23 @@ const Home = () => {
         { title, description },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure your token is valid
           },
         }
       );
 
-      if (response.data.success) {
+      // Check if the response indicates success
+      if (response.data && response.data.success) {
         fetchNotes();
         closeModal();
       } else {
         console.error("Error: Response did not indicate success", response.data);
       }
     } catch (error) {
+      // Log detailed error message for debugging
       console.error("Error saving note:", error.response?.data || error.message);
     }
   };
-   const editNote = async (id, title, description) =>{
-    try {
-      const url = currentNote
-        ? `http://localhost:5000/api/note/update/${currentNote._id}`
-        : "http://localhost:5000/api/note/add";
-      const method = currentNote ? "put" : "post";
-
-      const response = await axios[method](
-        url,
-        { title, description },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.data.success) {
-        fetchNotes();
-        closeModal();
-      } else {
-        console.error("Error: Response did not indicate success", response.data);
-      }
-    } catch (error) {
-      console.error("Error saving note:", error.response?.data || error.message);
-    }
-   }
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -97,7 +94,11 @@ const Home = () => {
       <div className="px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
         {notes.map((note) => (
           <div className="flex justify-center" key={note._id}>
-            <NoteCard note={note} onEdit={() => onEdit(note)} />
+            <NoteCard
+              note={note}
+              onEdit={() => onEdit(note)}
+              deleteNote={() => deleteNote(note._id)} // Pass the note ID to the delete function
+            />
           </div>
         ))}
       </div>
@@ -112,7 +113,7 @@ const Home = () => {
       </button>
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <NoteModal closeModal={closeModal} addNote={addNote} currentNote={currentNote} editNote={editNote} />
+          <NoteModal closeModal={closeModal} addNote={addNote} currentNote={currentNote} />
         </div>
       )}
     </div>

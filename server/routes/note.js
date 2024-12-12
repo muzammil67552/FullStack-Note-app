@@ -56,4 +56,18 @@ router.post("/add", middleware, async (req, res) => {
     }
   });
 
+  router.delete('/delete/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deletedNote = await Note.findByIdAndDelete(id); // or your deletion logic
+        if (!deletedNote) {
+            return res.status(404).json({ success: false, message: 'Note not found' });
+        }
+        res.json({ success: true, message: 'Note deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting note:", error);
+        res.status(500).json({ success: false, message: 'Note not delete' });
+    }
+});
+
 module.exports = router;

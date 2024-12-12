@@ -1,7 +1,7 @@
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-const NoteCard = ({ note, onEdit }) => {
+const NoteCard = ({ note, onEdit , deleteNote}) => {
   return (
     <div className="w-80 h-40 bg-white shadow-md rounded-lg p-4 flex flex-col justify-between hover:shadow-lg transition duration-300">
       <div>
@@ -13,7 +13,7 @@ const NoteCard = ({ note, onEdit }) => {
           <FaEdit onClick={()=> onEdit(note)}  />
         </button>
         <button className="text-red-500 hover:text-red-700">
-          <MdDelete />
+          <MdDelete onClick={()=> deleteNote(note)} />
         </button>
       </div>
     </div>

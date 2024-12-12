@@ -35,4 +35,25 @@ router.post("/add", middleware, async (req, res) => {
     }
   })
 
+  router.put("/update/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title, description } = req.body;
+  
+      const updatedNote = await Note.findByIdAndUpdate(
+        id,
+        { title, description },
+        { new: true }
+      );
+  
+      if (!updatedNote) {
+        return res.status(404).json({ success: false, message: "Note not found" });
+      }
+  
+      res.json({ success: true, note: updatedNote });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+  });
+
 module.exports = router;

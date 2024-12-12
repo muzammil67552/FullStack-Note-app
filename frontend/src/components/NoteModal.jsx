@@ -1,20 +1,32 @@
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 
-const NoteModal = ({ closeModal, addNote }) => {
+
+const NoteModal = ({ closeModal, addNote,currentNote , editNote}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+ useEffect( () => {
+   if(currentNote) {
+    setTitle(currentNote.title)
+    setDescription(currentNote.description)
+   }
+ },[currentNote])
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    addNote(title, description);
+    if(currentNote) {
+        editNote(currentNote._id, title, description)
+    } else {
+      addNote(title, description);
+    }
+   
   };
 
   return (
     <div className="flex justify-center items-center bg-black bg-opacity-50 fixed inset-0 z-50">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-2xl relative">
         <h1 className="text-3xl font-extrabold text-center text-gray-700 mb-6">
-          Add New Note
+          {currentNote ? "Edit Note Now" : "Add New Note"}
         </h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -40,7 +52,7 @@ const NoteModal = ({ closeModal, addNote }) => {
             type="submit"
             className="w-full py-3 px-5 text-white font-bold text-lg rounded-lg bg-gradient-to-r from-green-400 to-blue-500 hover:from-blue-500 hover:to-green-400 transition-all transform hover:scale-105"
           >
-            Add Now
+            { currentNote ? "Edit Note" : "Add Note"}
           </button>
         </form>
         <button

@@ -8,11 +8,23 @@ const Home = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [notes, setNotes] = useState([]);
   const [currentNote, setCurrentNote] = useState(null);
+  const [query, setQuery] = useState("");
+  const [filtereNote, setFiltereNote] = useState([]); // Initialize as an empty array
 
   // Fetch notes from the backend
   useEffect(() => {
     fetchNotes();
   }, []);
+
+  // Update filtered notes when notes or query changes
+  useEffect(() => {
+    setFiltereNote(
+      notes.filter((note) =>
+        note.title.toLowerCase().includes(query.toLowerCase()) ||
+        note.description.toLowerCase().includes(query.toLowerCase())
+      )
+    );
+  }, [query, notes]);
 
   const fetchNotes = async () => {
     try {
@@ -26,7 +38,7 @@ const Home = () => {
   // Close the modal
   const closeModal = () => {
     setModalOpen(false);
-    setCurrentNote(null); // Reset the current note when closing the modal
+    setCurrentNote(null);
   };
 
   // Open the modal for editing a specific note
@@ -94,7 +106,7 @@ const Home = () => {
       });
 
       if (response.data && response.data.success) {
-        fetchNotes(); // Refresh the notes after editing
+        fetchNotes();
         closeModal();
       } else {
         console.error("Error: Response did not indicate success", response.data);
@@ -107,20 +119,33 @@ const Home = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Navbar />
-      <div className="px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
-        {notes.map((note) => (
-          <div className="flex justify-center" key={note._id}>
-            <NoteCard
-              note={note}
-              onEdit={() => onEdit(note)}
-              deleteNote={() => deleteNote(note._id)} // Pass the note ID to the delete function
-            />
-          </div>
-        ))}
+      <div className="px-8 mt-8">
+        <input
+          type="text"
+          placeholder="Search notes..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)} // Update query state
+          className="border rounded p-2 w-full mb-4"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {filtereNote && filtereNote.length > 0 ? (
+            filtereNote.map((note) => (
+              <div className="flex justify-center" key={note._id}>
+                <NoteCard
+                  note={note}
+                  onEdit={() => onEdit(note)}
+                  deleteNote={() => deleteNote(note._id)}
+                />
+              </div>
+            ))
+          ) : (
+            <p>No Note Found</p>
+          )}
+        </div>
       </div>
       <button
         onClick={() => {
-          setCurrentNote(null); // Reset current note for adding a new note
+          setCurrentNote(null);
           setModalOpen(true);
         }}
         className="fixed right-4 bottom-4 bg-blue-800 font-bold p-4 rounded-full text-white text-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
@@ -132,7 +157,7 @@ const Home = () => {
           <NoteModal 
             closeModal={closeModal} 
             addNote={addNote} 
-            editNote={editNote} // Pass the editNote function
+            editNote={editNote} 
             currentNote={currentNote} 
           />
         </div>

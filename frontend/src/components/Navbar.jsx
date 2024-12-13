@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { useAuth } from "./context/ContextProvider";
 
@@ -11,15 +10,6 @@ const Navbar = () => {
         {/* Logo */}
         <div className="text-white text-xl font-bold">
           <Link to="/">NoteApp</Link>
-        </div>
-
-        {/* Search Input */}
-        <div className="hidden md:block w-1/3">
-          <input
-            type="text"
-            placeholder="Search notes..."
-            className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300"
-          />
         </div>
 
         {/* User Section */}
